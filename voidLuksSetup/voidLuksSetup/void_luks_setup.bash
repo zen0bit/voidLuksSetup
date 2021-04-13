@@ -126,7 +126,7 @@ case $graphical_de in
         apps="$apps $apps_xfce"
 	en_services+=("lightdm")
         ;;
-    "oopenbox")
+    "openbox")
         apps="$apps $apps_openbox"
         en_services+=("lightdm")
         ;;	
