@@ -4,40 +4,52 @@
 #BEGIN MANDATORY FIELDS
 #These fields must be configured as per your computer hardware and desired install configuration
 
-efi_part_size="260M"		#Minimum of 100M, Arch wiki recommends at least 260M (as of 24-Mar-2021)
+efi_part_size="260M"
+#Minimum of 100M, Arch wiki recommends at least 260M (as of 24-Mar-2021)
 
-root_part_size="20G"		#Size of the root partition. Required size depends on how much software you ultimately install
-				#If you run this install script without modifying the apps to be installed (including KDE graphical DE), about 4-5G is used
-				#Arch wiki recommends 15-20G (as of 24-Mar-2021)
-				#Alternatively, leave blank to omit creating a separate home partition, and have root occupy the entire drive
+root_part_size="20G"
+#Size of the root partition. Required size depends on how much software you ultimately install
+#If you run this install script without modifying the apps to be installed (including KDE graphical DE), about 4-5G is used
+#Arch wiki recommends 15-20G (as of 24-Mar-2021)
+#Alternatively, leave blank to omit creating a separate home partition, and have root occupy the entire drive
 				
-swap_size=""			#If you want to use suspend-to-disk (AKA hibernate), should be >= amount of RAM (some recommend 2x RAM if you have <8GB).
-				#Otherwise, how much swap space (if any) is needed is debatable, rule of thumb I use is equal to square root of RAM (rounded up to whole GB)
+swap_size=""
+#If you want to use suspend-to-disk (AKA hibernate), should be >= amount of RAM (some recommend 2x RAM if you have <8GB).
+#Otherwise, how much swap space (if any) is needed is debatable, rule of thumb I use is equal to square root of RAM (rounded up to whole GB)
 
-username="user"			#Desired username for regular (non-root) user of the Void installation you're making
+username="user"
+#Desired username for regular (non-root) user of the Void installation you're making
 
-hostname="desktop"		#Desired name to be used for the hostname of the Void installation as well as the volume group name
+hostname="desktop"
+#Desired name to be used for the hostname of the Void installation as well as the volume group name
 
-fs_type="ext4"			#Desired filesystem to be used for the root and home partitions
+fs_type="ext4"
+#Desired filesystem to be used for the root and home partitions
 
-libc="musl" 			#"musl" for musl, "" for glibc.
+libc="musl"
+#"musl" for musl, "" for glibc.
 
 language="en_US.UTF-8"
 
-vendor_cpu="intel"		#Enter either "amd" or "intel" (all lowercase). This script assumes you're installing on an x86_64 system
+vendor_cpu="intel"
+#Enter either "amd" or "intel" (all lowercase). This script assumes you're installing on an x86_64 system
 
-vendor_gpu="amd"		#Enter either "amd", "intel", or "nvidia" (all lowercase)
-				#For AMD will install the OpenGL and Vulkan driver (mesa, not amdvlk), as well as the video acceration drivers.
-				#For Intel this installs OpenGL and Vulkan drivers, and video acceleration drivers
-				#For Nvidia this installs the proprietary driver. It assumes you're using a non-legacy GPU, which generally means any Geforce 600 or newer GTX card (some of the low end GT cards from 600, 700, and 800 series are legacy) 
+vendor_gpu="amd"
+#Enter either "amd", "intel", or "nvidia" (all lowercase)
+#For AMD will install the OpenGL and Vulkan driver (mesa, not amdvlk), as well as the video acceration drivers.
+#For Intel this installs OpenGL and Vulkan drivers, and video acceleration drivers
+#For Nvidia this installs the proprietary driver. It assumes you're using a non-legacy GPU, which generally means any Geforce 600 or newer GTX card (some of the low end GT cards from 600, 700, and 800 series are legacy) 
 
-discards="rd.luks.allow-discards"	#If you're installing on an SSD and you want discard (automatic TRIM) enabled, enter "rd.luks.allow-discards".
-					#Otherwise, leave blank (just double quotes, "")
-					#Note that there privacy/security considerations to enabling TRIM with LUKS: https://wiki.archlinux.org/index.php/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
+discards="rd.luks.allow-discards"
+#If you're installing on an SSD and you want discard (automatic TRIM) enabled, enter "rd.luks.allow-discards".
+#Otherwise, leave blank (just double quotes, "")
+#Note that there privacy/security considerations to enabling TRIM with LUKS: https://wiki.archlinux.org/index.php/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
 
-graphical_de="kde"		#"xfce" for an XFCE4 (xorg) install
-                        	#Or "kde" for a KDE Plasma 5 (wayland) install. Somewhat reduced install compared to the full 'kde5' meta-package. Uses a console-based display manager (emptty) rather than SDDM (as this would require Xorg).
-                        	#Or leave blank (just double quotes, "") to not install DE. Will skip graphics driver installation as well
+graphical="kde"
+#"xfce" for an XFCE4 (xorg) install
+#Or "kde" for a KDE Plasma 5 (wayland) install. Somewhat reduced install compared to the full 'kde5' meta-package. Uses a console-based display manager (emptty) rather than SDDM (as this would require Xorg).
+#Or "openbox" for openbox WM (xorg) install
+#Or leave blank (just double quotes, "") to not install DE. Will skip graphics driver installation as well
 
 void_repo="https://alpha.de.repo.voidlinux.org/"	#List of mirrors can be found here: https://docs.voidlinux.org/xbps/repositories/mirrors/index.html
 
@@ -72,7 +84,7 @@ declare apps_nvidia_gpu="nvidia"
 declare apps_kde="kde5 kde5-baseapps kcron pulseaudio ark user-manager plasma-wayland-protocols xdg-desktop-portal-kde plasma-applet-active-window-control" #libreoffice-kde plasma-disks partitionmanager 
 #plasma-firewall GUI front end for ufw doesn't seem to work properly as of April/21
 declare apps_xfce="lightdm-gtk3-greeter xfce4 xdg-desktop-portal-gtk xdg-user-dirs-gtk"
-declare apps_ob="openbox obconf obmenu-generator tint2 lxappearance alsa-utils lightdm-gtk3-greeter xdg-desktop-portal-gtk xdg-user-dirs-gtk"
+declare apps_openbox="openbox obconf obmenu-generator tint2 lxappearance alsa-utils lightdm-gtk3-greeter xdg-desktop-portal-gtk xdg-user-dirs-gtk"
 #END CPU/DRIVER/DE PACKAGES
 ###############################################################################################################
 
@@ -92,7 +104,7 @@ case $vendor_cpu in
         apps="$apps $apps_intel_cpu"
         ;;
 esac
-if [[ -n $graphical_de ]]; then
+if [[ -n $graphical ]]; then
     case $vendor_gpu in
         "amd")
             apps="$apps $apps_amd_gpu"
@@ -105,7 +117,7 @@ if [[ -n $graphical_de ]]; then
             ;;
     esac
 fi
-case $graphical_de in
+case $graphical in
     "kde")
         apps="$apps $apps_kde"
 	en_services+=("sddm")
@@ -114,8 +126,8 @@ case $graphical_de in
         apps="$apps $apps_xfce"
 	en_services+=("lightdm")
         ;;
-    "ob")
-        apps="$apps $apps_ob"
+    "openbox")
+        apps="$apps $apps_openbox"
         en_services+=("lightdm")
         ;;	
 esac
