@@ -104,7 +104,7 @@ case $vendor_cpu in
         apps="$apps $apps_intel_cpu"
         ;;
 esac
-if [[ -n $graphical_de ]]; then
+if [[ -n $graphical ]]; then
     case $vendor_gpu in
         "amd")
             apps="$apps $apps_amd_gpu"
@@ -117,7 +117,7 @@ if [[ -n $graphical_de ]]; then
             ;;
     esac
 fi
-case $graphical_de in
+case $graphical in
     "kde")
         apps="$apps $apps_kde"
 	en_services+=("sddm")
